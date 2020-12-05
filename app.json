@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "날씨앱",
+    "githubUrl": "https://github.com/kim-hyunjin/react-native-study"
   }
 }
