@@ -1,1 +1,2 @@
-#³¯¾¾¾Û ¸¸µé¸ç ¸®¾×Æ® ³×ÀÌÆ¼ºê ¹è¿ì±â
+#ë‚ ì”¨ì•± ë§Œë“¤ë©° ë¦¬ì•¡íŠ¸ ë„¤ì´í‹°ë¸Œ ë°°ìš°ê¸°
+https://expo.io/@kim-hyunjin/projects/weather-app
