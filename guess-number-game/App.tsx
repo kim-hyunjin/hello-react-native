@@ -15,14 +15,21 @@ export default function App() {
   });
   const [pickedNumber, setPickedNumber] = useState<number | null>(null);
   const [gameIsOver, setGameIsOver] = useState(true);
+  const [guessRound, setGuessRound] = useState(0);
 
   const pickNumberHandler = useCallback((number: number) => {
     setPickedNumber(number);
     setGameIsOver(false);
   }, []);
 
-  const gameOverHandler = useCallback(() => {
+  const gameOverHandler = useCallback((numberOfRounds: number) => {
     setGameIsOver(true);
+    setGuessRound(numberOfRounds);
+  }, []);
+
+  const startNewGameHandler = useCallback(() => {
+    setPickedNumber(null);
+    setGuessRound(0);
   }, []);
 
   if (!fontsLoaded) return <AppLoading />;
@@ -33,7 +40,13 @@ export default function App() {
     screen = <GameScreen userNumber={pickedNumber} onGameOver={gameOverHandler} />;
   }
   if (gameIsOver && pickedNumber) {
-    screen = <GameOverScreen />;
+    screen = (
+      <GameOverScreen
+        rounds={guessRound}
+        userNumber={pickedNumber}
+        onStartNewGame={startNewGameHandler}
+      />
+    );
   }
 
   return (
