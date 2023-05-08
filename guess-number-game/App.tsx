@@ -4,18 +4,36 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useCallback } from 'react';
 import GameScreen from './screens/GameScreen';
 import Colors from './constants/color';
+import GameOverScreen from './screens/GameOverScreen';
+import AppLoading from 'expo-app-loading';
+import { useFonts } from 'expo-font';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+  });
   const [pickedNumber, setPickedNumber] = useState<number | null>(null);
+  const [gameIsOver, setGameIsOver] = useState(true);
 
   const pickNumberHandler = useCallback((number: number) => {
     setPickedNumber(number);
+    setGameIsOver(false);
   }, []);
+
+  const gameOverHandler = useCallback(() => {
+    setGameIsOver(true);
+  }, []);
+
+  if (!fontsLoaded) return <AppLoading />;
 
   let screen = <StartGameScreen onPickNumber={pickNumberHandler} />;
 
   if (pickedNumber) {
-    screen = <GameScreen userNumber={pickedNumber} />;
+    screen = <GameScreen userNumber={pickedNumber} onGameOver={gameOverHandler} />;
+  }
+  if (gameIsOver && pickedNumber) {
+    screen = <GameOverScreen />;
   }
 
   return (
