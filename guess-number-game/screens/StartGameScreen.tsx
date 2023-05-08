@@ -1,16 +1,49 @@
-import { StyleSheet, TextInput, View } from 'react-native';
-import PrimaryButton from '../components/PrimaryButton';
+import { Alert, StyleSheet, TextInput, View } from 'react-native';
+import PrimaryButton from '../components/ui/PrimaryButton';
+import { useCallback, useState } from 'react';
+import Colors from '../constants/color';
 
-const StartGameScreen = () => {
+const StartGameScreen = ({ onPickNumber }: { onPickNumber: (number: number) => void }) => {
+  const [enteredValue, setEnteredValue] = useState('');
+
+  const inputChangeHandler = useCallback((text: string) => {
+    setEnteredValue(text);
+  }, []);
+
+  const resetInputHandler = useCallback(() => {
+    setEnteredValue('');
+  }, []);
+
+  const confirmButtonHandler = () => {
+    const chosenNumber = Number(enteredValue);
+    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+      Alert.alert('Invalid number', 'it has to be number between 0 and 99', [
+        {
+          text: 'OK',
+          style: 'destructive',
+          onPress: resetInputHandler,
+        },
+      ]);
+      return;
+    }
+
+    onPickNumber(chosenNumber);
+  };
   return (
     <View style={styles.inputContainer}>
-      <TextInput style={styles.numberInput} maxLength={2} keyboardType='number-pad' />
+      <TextInput
+        style={styles.numberInput}
+        maxLength={2}
+        keyboardType='number-pad'
+        value={enteredValue}
+        onChangeText={inputChangeHandler}
+      />
       <View style={styles.buttonContainer}>
         <View style={styles.button}>
-          <PrimaryButton>Reset</PrimaryButton>
+          <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
         </View>
         <View style={styles.button}>
-          <PrimaryButton>Confirm</PrimaryButton>
+          <PrimaryButton onPress={confirmButtonHandler}>Confirm</PrimaryButton>
         </View>
       </View>
     </View>
@@ -36,15 +69,15 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 6,
     shadowOpacity: 0.25,
-    backgroundColor: '#490126',
+    backgroundColor: Colors.primary500,
   },
   numberInput: {
     width: 50,
     height: 50,
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#ddb52f',
-    borderBottomColor: '#ddb52f',
+    color: Colors.accent500,
+    borderBottomColor: Colors.accent500,
     borderBottomWidth: 2,
     marginVertical: 8,
     textAlign: 'center',
