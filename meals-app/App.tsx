@@ -1,12 +1,28 @@
 import { StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CategoriesScreen from './screens/CategoriesScreen';
+import MealsOverviewScreen from './screens/MealsOverviewScreen';
+
+export type StackParamList = {
+  MealsCategories: undefined;
+  MealsOverview: {
+    categoryId: string;
+  };
+};
+const Stack = createNativeStackNavigator<StackParamList>();
 
 export default function App() {
   return (
     <>
       <StatusBar style={'light'} />
-      <CategoriesScreen />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name='MealsCategories' component={CategoriesScreen} />
+          <Stack.Screen name='MealsOverview' component={MealsOverviewScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   );
 }
