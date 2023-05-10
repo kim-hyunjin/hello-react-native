@@ -1,16 +1,32 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Image, Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Image, Text, View, StyleSheet, ScrollView, Button } from 'react-native';
 import { StackParamList } from '../App';
 import { MEALS } from '../data/dummy-data';
 import MealDetails from '../components/MealDetails';
 import Colors from '../constants/Colors';
 import Subtitle from '../components/MealDetail/Subtitle';
 import List from '../components/MealDetail/List';
+import { useLayoutEffect } from 'react';
+import IconButton from '../components/IconButton';
 
-const MealsDetailScreen = ({ route }: NativeStackScreenProps<StackParamList, 'MealDetail'>) => {
+const MealsDetailScreen = ({
+  route,
+  navigation,
+}: NativeStackScreenProps<StackParamList, 'MealDetail'>) => {
   const { mealId } = route.params;
-
   const displayMeal = MEALS.find((meal) => meal.id === mealId);
+
+  const headerButtonHandler = () => {
+    console.log('Pressed!');
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return <IconButton onPress={headerButtonHandler} />;
+      },
+    });
+  }, []);
 
   if (!displayMeal) {
     return (
