@@ -9,6 +9,7 @@ import MealsOverviewScreen from './screens/MealsOverviewScreen';
 import MealsDetailScreen from './screens/MealsDetailScreen';
 import Colors from './constants/Colors';
 import FavoritesScreen from './screens/FavoritesScreen';
+import { Ionicons } from '@expo/vector-icons';
 
 export type StackParamList = {
   Drawer: undefined;
@@ -39,6 +40,12 @@ const screenOption = {
   sceneContainerStyle: {
     backgroundColor: Colors.brown500,
   },
+  drawerContentStyle: {
+    backgroundColor: Colors.brown600,
+  },
+  drawerInactiveTintColor: 'white',
+  drawerActiveTintColor: Colors.brown600,
+  drawerActiveBackgroundColor: Colors.brown100,
 };
 
 const DrawerNavigator = () => {
@@ -49,9 +56,16 @@ const DrawerNavigator = () => {
         component={CategoriesScreen}
         options={{
           title: 'All Categories',
+          drawerIcon: ({ color, size }) => <Ionicons name='list' color={color} size={size} />,
         }}
       />
-      <Drawer.Screen name='Favorites' component={FavoritesScreen} />
+      <Drawer.Screen
+        name='Favorites'
+        component={FavoritesScreen}
+        options={{
+          drawerIcon: ({ color, size }) => <Ionicons name='star' color={color} size={size} />,
+        }}
+      />
     </Drawer.Navigator>
   );
 };
