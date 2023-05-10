@@ -21,15 +21,7 @@ const MealsOverviewScreen = ({
   }, [categoryId, navigation]);
 
   const renderMealItem = (item: Meal) => {
-    return (
-      <MealItem
-        title={item.title}
-        imageUrl={item.imageUrl}
-        duration={item.duration}
-        complexity={item.complexity}
-        affordability={item.affordability}
-      />
-    );
+    return <MealItem meal={item} />;
   };
 
   return (
