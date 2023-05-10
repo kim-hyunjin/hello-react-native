@@ -11,6 +11,8 @@ import Colors from './constants/Colors';
 import FavoritesScreen from './screens/FavoritesScreen';
 import { Ionicons } from '@expo/vector-icons';
 import FavoritesContextProvider from './store/context/favorites-context';
+import { Provider } from 'react-redux';
+import store from './store/redux/store';
 
 export type StackParamList = {
   Drawer: undefined;
@@ -75,7 +77,8 @@ export default function App() {
   return (
     <>
       <StatusBar style={'light'} />
-      <FavoritesContextProvider>
+      {/* <FavoritesContextProvider> */}
+      <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator screenOptions={screenOption}>
             <Stack.Screen
@@ -104,7 +107,8 @@ export default function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </FavoritesContextProvider>
+      </Provider>
+      {/* </FavoritesContextProvider> */}
     </>
   );
 }
