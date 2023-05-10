@@ -1,10 +1,10 @@
 import { Text, Pressable, View, Image, StyleSheet } from 'react-native';
-import Meal, { Affordability, Complexity } from '../models/meal';
-import shadow from '../styles/shadow';
-import CustomPressable from './CustomPressable';
+import Meal, { Affordability, Complexity } from '../../models/meal';
+import shadow from '../../styles/shadow';
+import CustomPressable from '../CustomPressable';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackParamList } from '../App';
-import MealDetails from './MealDetails';
+import { StackParamList } from '../../App';
+import MealDetails from '../MealDetails';
 
 const MealItem = ({ meal }: { meal: Meal }) => {
   const { id, title, imageUrl } = meal;

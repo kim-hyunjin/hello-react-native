@@ -10,6 +10,7 @@ import MealsDetailScreen from './screens/MealsDetailScreen';
 import Colors from './constants/Colors';
 import FavoritesScreen from './screens/FavoritesScreen';
 import { Ionicons } from '@expo/vector-icons';
+import FavoritesContextProvider from './store/context/favorites-context';
 
 export type StackParamList = {
   Drawer: undefined;
@@ -74,34 +75,36 @@ export default function App() {
   return (
     <>
       <StatusBar style={'light'} />
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={screenOption}>
-          <Stack.Screen
-            name='Drawer'
-            component={DrawerNavigator}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name='MealsOverview'
-            component={MealsOverviewScreen}
-            // options={({ route, navigation }) => {
-            //   const { categoryId } = route.params;
-            //   return {
-            //     title: categoryId,
-            //   };
-            // }}
-          />
-          <Stack.Screen
-            name='MealDetail'
-            component={MealsDetailScreen}
-            options={{
-              title: 'About the meal',
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <FavoritesContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={screenOption}>
+            <Stack.Screen
+              name='Drawer'
+              component={DrawerNavigator}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name='MealsOverview'
+              component={MealsOverviewScreen}
+              // options={({ route, navigation }) => {
+              //   const { categoryId } = route.params;
+              //   return {
+              //     title: categoryId,
+              //   };
+              // }}
+            />
+            <Stack.Screen
+              name='MealDetail'
+              component={MealsDetailScreen}
+              options={{
+                title: 'About the meal',
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </FavoritesContextProvider>
     </>
   );
 }

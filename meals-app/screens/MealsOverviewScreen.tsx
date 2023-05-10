@@ -3,8 +3,9 @@ import { CATEGORIES, MEALS } from '../data/dummy-data';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StackParamList } from '../App';
 import Meal from '../models/meal';
-import MealItem from '../components/MealItem';
+import MealItem from '../components/MealsList/MealItem';
 import { useEffect, useLayoutEffect } from 'react';
+import MealsList from '../components/MealsList/MealsList';
 
 const MealsOverviewScreen = ({
   route,
@@ -20,26 +21,7 @@ const MealsOverviewScreen = ({
     });
   }, [categoryId, navigation]);
 
-  const renderMealItem = (item: Meal) => {
-    return <MealItem meal={item} />;
-  };
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={displayMeals}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => renderMealItem(item)}
-      />
-    </View>
-  );
+  return <MealsList meals={displayMeals} />;
 };
 
 export default MealsOverviewScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});
