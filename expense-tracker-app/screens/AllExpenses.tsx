@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import ExpensesOutput from '../components/Expenses/ExpensesOutput';
-import { DUMMY_EXPENSES } from '../fixture/dummy-expenses';
+import { ExpensesContext } from '../store/context/expenses-context';
 
 export default function AllExpenses() {
-  return <ExpensesOutput expenses={DUMMY_EXPENSES} expensePeriod='Total' />;
+  const expenseCtx = useContext(ExpensesContext);
+  return <ExpensesOutput expenses={expenseCtx.expenses} expensePeriod='Total' />;
 }
