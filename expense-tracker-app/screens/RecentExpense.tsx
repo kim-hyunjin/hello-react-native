@@ -1,10 +1,12 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ExpensesOutput from '../components/Expenses/ExpensesOutput';
 import { ExpensesContext } from '../store/context/expenses-context';
 import { getDateMinusDays } from '../utils/date';
 import { fetchExpenses } from '../utils/http';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
 
 export default function RecentExpense() {
+  const [isFetching, setIsFetching] = useState(true);
   const expenseCtx = useContext(ExpensesContext);
 
   const recentExpenses = expenseCtx.expenses.filter((ex) => {
@@ -14,8 +16,16 @@ export default function RecentExpense() {
   });
 
   useEffect(() => {
-    fetchExpenses().then((expenses) => expenseCtx.setExpenses(expenses));
+    setIsFetching(true);
+    fetchExpenses().then((expenses) => {
+      expenseCtx.setExpenses(expenses);
+      setIsFetching(false);
+    });
   }, []);
+
+  if (isFetching) {
+    return <LoadingOverlay />;
+  }
 
   return (
     <ExpensesOutput
