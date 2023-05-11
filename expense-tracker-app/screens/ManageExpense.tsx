@@ -8,11 +8,14 @@ import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import { Expense, NewExpense } from '../types/expense';
 import { deleteExpense, storeExpense, updateExpense } from '../utils/http';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 
 type Props = ManageExpenseScreenProps;
 
 export default function ManageExpense({ route, navigation }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const expenseCtx = useContext(ExpensesContext);
   const expenseId = route.params?.expenseId;
   const isEditing = !!expenseId;
@@ -25,10 +28,15 @@ export default function ManageExpense({ route, navigation }: Props) {
   }, [navigation, isEditing]);
 
   const deleteExpenseHandler = async () => {
-    expenseCtx.deleteExpense(expenseId);
     setIsSubmitting(true);
-    await deleteExpense(expenseId);
-    navigation.goBack();
+    try {
+      await deleteExpense(expenseId);
+      expenseCtx.deleteExpense(expenseId);
+      navigation.goBack();
+    } catch (e) {
+      setError('Could not delete expense - please try again later');
+      setIsSubmitting(false);
+    }
   };
 
   const cancelHandler = () => {
@@ -37,20 +45,32 @@ export default function ManageExpense({ route, navigation }: Props) {
 
   const submitHandler = async (expenseData: NewExpense) => {
     setIsSubmitting(true);
-
-    if (isEditing) {
-      const updatedExpense: Expense = {
-        ...expenseData,
-        id: expenseId,
-      };
-      expenseCtx.updateExpense(updatedExpense);
-      await updateExpense(updatedExpense);
-    } else {
-      const id = await storeExpense(expenseData);
-      expenseCtx.addExpense({ ...expenseData, id });
+    try {
+      if (isEditing) {
+        const updatedExpense: Expense = {
+          ...expenseData,
+          id: expenseId,
+        };
+        expenseCtx.updateExpense(updatedExpense);
+        await updateExpense(updatedExpense);
+      } else {
+        const id = await storeExpense(expenseData);
+        expenseCtx.addExpense({ ...expenseData, id });
+      }
+      navigation.goBack();
+    } catch (e) {
+      setError('Could not save expense - please try again later');
+      setIsSubmitting(false);
     }
-    navigation.goBack();
   };
+
+  const errorHandler = () => {
+    setError(null);
+  };
+
+  if (error && !isSubmitting) {
+    return <ErrorOverlay message={error} onConfirm={errorHandler} />;
+  }
 
   if (isSubmitting) {
     return <LoadingOverlay />;
