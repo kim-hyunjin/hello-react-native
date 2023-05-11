@@ -1,26 +1,21 @@
 import { View, StyleSheet, Text } from 'react-native';
-import { useState, useCallback, useContext } from 'react';
+import { useState, useCallback } from 'react';
 import Input from './Input';
 import CustomButton from '../UI/CustomButton';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { ExpensesContext } from '../../store/context/expenses-context';
-import { StackParamList } from '../../navigation/types';
+
 import { getFormattedDate } from '../../utils/date';
+import { Expense, NewExpense } from '../../types/expense';
 
-type Props = {};
-export default function ExpenseForm({}: Props) {
-  const navigation = useNavigation();
-  const expenseCtx = useContext(ExpensesContext);
-  const route = useRoute<RouteProp<StackParamList>>();
-
-  const expenseId = route.params?.expenseId;
-  const isEditing = !!expenseId;
-  const oldExpense = expenseCtx.expenses.find((ex) => ex.id === expenseId);
-
+type Props = {
+  defaultValue?: Expense;
+  onCancel: () => void;
+  onSubmit: (expenseData: Expense | NewExpense) => void;
+};
+export default function ExpenseForm({ defaultValue, onCancel, onSubmit }: Props) {
   const [inputValue, setInputValue] = useState({
-    amount: oldExpense ? String(oldExpense.amount) : '',
-    date: oldExpense ? getFormattedDate(oldExpense.date) : '',
-    description: oldExpense?.description ?? '',
+    amount: defaultValue ? String(defaultValue.amount) : '',
+    date: defaultValue ? getFormattedDate(defaultValue.date) : '',
+    description: defaultValue?.description ?? '',
   });
 
   const amountChangeHandler = useCallback((enteredAmount: string) => {
@@ -44,22 +39,13 @@ export default function ExpenseForm({}: Props) {
     }));
   }, []);
 
-  const cancelHandler = () => {
-    navigation.goBack();
-  };
-
   const confirmHandler = () => {
     const expenseData = {
       amount: +inputValue.amount,
       date: new Date(inputValue.date),
       description: inputValue.description,
     };
-    if (isEditing) {
-      expenseCtx.updateExpense({ ...expenseData, id: expenseId });
-    } else {
-      expenseCtx.addExpense(expenseData);
-    }
-    navigation.goBack();
+    onSubmit(expenseData);
   };
 
   return (
@@ -96,11 +82,11 @@ export default function ExpenseForm({}: Props) {
         }}
       />
       <View style={styles.buttonContainer}>
-        <CustomButton mode='flat' onPress={cancelHandler} style={styles.button}>
+        <CustomButton mode='flat' onPress={onCancel} style={styles.button}>
           Cancel
         </CustomButton>
         <CustomButton onPress={confirmHandler} style={styles.button}>
-          {isEditing ? 'Update' : 'Add'}
+          {defaultValue ? 'Update' : 'Add'}
         </CustomButton>
       </View>
     </View>

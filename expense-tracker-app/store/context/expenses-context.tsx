@@ -1,8 +1,6 @@
 import { ReactNode, createContext, useReducer } from 'react';
-import { Expense } from '../../types/expense';
+import { Expense, NewExpense } from '../../types/expense';
 import { DUMMY_EXPENSES } from '../../fixture/dummy-expenses';
-
-type NewExpense = Omit<Expense, 'id'>;
 
 type ExpenseContextProps = {
   expenses: Expense[];
