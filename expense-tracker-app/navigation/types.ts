@@ -9,7 +9,9 @@ export type ButtomTabParamList = {
 
 export type StackParamList = {
   [RouteName.EXPENSE_OVERVIEW]: undefined;
-  [RouteName.MANAGE_EXPENSE]: undefined;
+  [RouteName.MANAGE_EXPENSE]: {
+    expenseId: string;
+  };
 };
 
 export type RecentExpenseScreenProps = BottomTabScreenProps<
