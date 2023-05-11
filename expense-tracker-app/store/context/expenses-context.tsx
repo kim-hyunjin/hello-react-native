@@ -1,24 +1,29 @@
 import { ReactNode, createContext, useReducer } from 'react';
-import { Expense, NewExpense } from '../../types/expense';
-import { DUMMY_EXPENSES } from '../../fixture/dummy-expenses';
+import { Expense } from '../../types/expense';
 
 type ExpenseContextProps = {
   expenses: Expense[];
-  addExpense: (newExpense: NewExpense) => void;
+  setExpenses: (expenses: Expense[]) => void;
+  addExpense: (newExpense: Expense) => void;
   deleteExpense: (id: string) => void;
   updateExpense: (expense: Expense) => void;
 };
 
 export const ExpensesContext = createContext<ExpenseContextProps>({
   expenses: [],
+  setExpenses: () => {},
   addExpense: () => {},
   deleteExpense: () => {},
   updateExpense: () => {},
 });
 
+export interface SetExpensesAction {
+  type: 'set';
+  payload: Expense[];
+}
 export interface AddExpenseAction {
   type: 'add';
-  payload: NewExpense;
+  payload: Expense;
 }
 export interface DeleteExpenseAction {
   type: 'delete';
@@ -28,10 +33,17 @@ export interface UpdateExpenseAction {
   type: 'update';
   payload: Expense;
 }
-export type ExpenseActions = AddExpenseAction | DeleteExpenseAction | UpdateExpenseAction;
+export type ExpenseActions =
+  | SetExpensesAction
+  | AddExpenseAction
+  | DeleteExpenseAction
+  | UpdateExpenseAction;
 
 function expensesReducer(expenses: Expense[], action: ExpenseActions) {
   switch (action.type) {
+    case 'set':
+      const inverted = action.payload.reverse();
+      return inverted;
     case 'add':
       const id = new Date().toString() + Math.random().toString();
       return [{ ...action.payload, id }, ...expenses];
@@ -50,9 +62,15 @@ function expensesReducer(expenses: Expense[], action: ExpenseActions) {
 }
 
 export default function ExpensesContextProvider({ children }: { children: ReactNode }) {
-  const [expensesState, dispatch] = useReducer(expensesReducer, DUMMY_EXPENSES);
+  const [expensesState, dispatch] = useReducer(expensesReducer, []);
 
-  const addExpense = (newExpense: NewExpense) => {
+  const setExpenses = (expenses: Expense[]) => {
+    dispatch({
+      type: 'set',
+      payload: expenses,
+    });
+  };
+  const addExpense = (newExpense: Expense) => {
     dispatch({
       type: 'add',
       payload: newExpense,
@@ -72,6 +90,7 @@ export default function ExpensesContextProvider({ children }: { children: ReactN
   };
   const value: ExpenseContextProps = {
     expenses: expensesState,
+    setExpenses,
     addExpense,
     deleteExpense,
     updateExpense,

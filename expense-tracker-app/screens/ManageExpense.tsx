@@ -1,12 +1,12 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { ManageExpenseScreenProps } from '../navigation/types';
 import { useContext, useLayoutEffect } from 'react';
 import IconButton from '../components/UI/IconButton';
 import { GlobalStyles } from '../constants/styles';
-import CustomButton from '../components/UI/CustomButton';
 import { ExpensesContext } from '../store/context/expenses-context';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import { Expense, NewExpense } from '../types/expense';
+import { deleteExpense, storeExpense, updateExpense } from '../utils/http';
 
 type Props = ManageExpenseScreenProps;
 
@@ -22,8 +22,9 @@ export default function ManageExpense({ route, navigation }: Props) {
     });
   }, [navigation, isEditing]);
 
-  const deleteExpenseHandler = () => {
+  const deleteExpenseHandler = async () => {
     expenseCtx.deleteExpense(expenseId);
+    await deleteExpense(expenseId);
     navigation.goBack();
   };
 
@@ -31,11 +32,17 @@ export default function ManageExpense({ route, navigation }: Props) {
     navigation.goBack();
   };
 
-  const submitHandler = (expenseData: Expense | NewExpense) => {
+  const submitHandler = async (expenseData: NewExpense) => {
     if (isEditing) {
-      expenseCtx.updateExpense({ ...expenseData, id: expenseId });
+      const updatedExpense: Expense = {
+        ...expenseData,
+        id: expenseId,
+      };
+      expenseCtx.updateExpense(updatedExpense);
+      await updateExpense(updatedExpense);
     } else {
-      expenseCtx.addExpense(expenseData);
+      const id = await storeExpense(expenseData);
+      expenseCtx.addExpense({ ...expenseData, id });
     }
     navigation.goBack();
   };

@@ -9,7 +9,7 @@ import { Expense, NewExpense } from '../../types/expense';
 type Props = {
   defaultValue?: Expense;
   onCancel: () => void;
-  onSubmit: (expenseData: Expense | NewExpense) => void;
+  onSubmit: (expenseData: NewExpense) => void;
 };
 export default function ExpenseForm({ defaultValue, onCancel, onSubmit }: Props) {
   const [inputValue, setInputValue] = useState({
