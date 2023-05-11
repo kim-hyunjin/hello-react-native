@@ -1,12 +1,13 @@
-import { FlatList, ListRenderItemInfo, Text } from 'react-native';
+import { FlatList, ListRenderItemInfo } from 'react-native';
 import { Expense } from '../../types/expense';
+import ExpenseItem from './ExpenseItem';
 
 type Props = {
   expenses: Expense[];
 };
 export default function ExpensesList({ expenses }: Props) {
   const renderExpenseItem = ({ item }: ListRenderItemInfo<Expense>) => {
-    return <Text>{item.description}</Text>;
+    return <ExpenseItem expense={item} />;
   };
 
   return <FlatList data={expenses} renderItem={renderExpenseItem} keyExtractor={keyExtractor} />;
