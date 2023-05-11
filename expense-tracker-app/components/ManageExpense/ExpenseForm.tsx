@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Alert } from 'react-native';
 import { useState, useCallback } from 'react';
 import Input from './Input';
 import CustomButton from '../UI/CustomButton';
@@ -16,6 +16,11 @@ export default function ExpenseForm({ defaultValue, onCancel, onSubmit }: Props)
     amount: defaultValue ? String(defaultValue.amount) : '',
     date: defaultValue ? getFormattedDate(defaultValue.date) : '',
     description: defaultValue?.description ?? '',
+  });
+  const [isInvalid, setIsInvalid] = useState({
+    amount: false,
+    date: false,
+    description: false,
   });
 
   const amountChangeHandler = useCallback((enteredAmount: string) => {
@@ -45,6 +50,20 @@ export default function ExpenseForm({ defaultValue, onCancel, onSubmit }: Props)
       date: new Date(inputValue.date),
       description: inputValue.description,
     };
+
+    const amountIsInvalid = isNaN(expenseData.amount) || expenseData.amount === 0;
+    const dateIsInvalid = expenseData.date.toString() === 'Invalid Date';
+    const descriptionIsInvalid = expenseData.description.trim().length === 0;
+
+    if (amountIsInvalid || dateIsInvalid || descriptionIsInvalid) {
+      Alert.alert('Invalid input', 'Please check your input values');
+      setIsInvalid({
+        amount: amountIsInvalid,
+        date: dateIsInvalid,
+        description: descriptionIsInvalid,
+      });
+      return;
+    }
     onSubmit(expenseData);
   };
 
@@ -55,6 +74,7 @@ export default function ExpenseForm({ defaultValue, onCancel, onSubmit }: Props)
         <Input
           style={styles.rowInput}
           label={'Amount'}
+          isInvalid={isInvalid.amount}
           textInputConfig={{
             keyboardType: 'decimal-pad',
             onChangeText: amountChangeHandler,
@@ -64,6 +84,7 @@ export default function ExpenseForm({ defaultValue, onCancel, onSubmit }: Props)
         <Input
           style={styles.rowInput}
           label={'Date'}
+          isInvalid={isInvalid.date}
           textInputConfig={{
             placeholder: 'YYYY-MM-DD',
             maxLength: 10,
@@ -74,6 +95,7 @@ export default function ExpenseForm({ defaultValue, onCancel, onSubmit }: Props)
       </View>
       <Input
         label={'Description'}
+        isInvalid={isInvalid.description}
         textInputConfig={{
           multiline: true,
           onChangeText: descriptionChangeHandler,
