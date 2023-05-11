@@ -5,6 +5,7 @@ import IconButton from '../components/UI/IconButton';
 import { GlobalStyles } from '../constants/styles';
 import CustomButton from '../components/UI/CustomButton';
 import { ExpensesContext } from '../store/context/expenses-context';
+import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 
 type Props = ManageExpenseScreenProps;
 
@@ -24,29 +25,9 @@ export default function ManageExpense({ route, navigation }: Props) {
     navigation.goBack();
   };
 
-  const cancelHandler = () => {
-    navigation.goBack();
-  };
-
-  const confirmHandler = () => {
-    if (isEditing) {
-      expenseCtx.updateExpense({ description: 'Test', amount: 1, date: new Date(), id: expenseId });
-    } else {
-      expenseCtx.addExpense({ description: 'Test', amount: 1, date: new Date() });
-    }
-    navigation.goBack();
-  };
-
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <CustomButton mode='flat' onPress={cancelHandler} style={styles.button}>
-          Cancel
-        </CustomButton>
-        <CustomButton onPress={confirmHandler} style={styles.button}>
-          {isEditing ? 'Update' : 'Add'}
-        </CustomButton>
-      </View>
+      <ExpenseForm />
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -67,15 +48,7 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: GlobalStyles.colors.primary800,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
-  },
+
   deleteContainer: {
     marginTop: 16,
     paddingTop: 8,
