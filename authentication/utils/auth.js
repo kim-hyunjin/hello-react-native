@@ -18,4 +18,6 @@ async function authenticate(mode, email, password) {
       returnSecureToken: true,
     }
   );
+
+  return data.idToken;
 }
