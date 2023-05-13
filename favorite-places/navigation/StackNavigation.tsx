@@ -3,6 +3,7 @@ import { RouteName } from './route-name';
 import AllPlaces from '../screens/AllPlaces';
 import AddPlace from '../screens/AddPlace';
 import IconButton from '../components/UI/IconButton';
+import { Colors } from '../constants/colors';
 
 export type StackParamList = {
   [RouteName.ALL_PLACES]: undefined;
@@ -13,11 +14,22 @@ const Stack = createNativeStackNavigator<StackParamList>();
 
 export default function StackNavigation() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: Colors.primary500,
+        },
+        headerTintColor: Colors.gray700,
+        contentStyle: {
+          backgroundColor: Colors.gray700,
+        },
+      }}
+    >
       <Stack.Screen
         name={RouteName.ALL_PLACES}
         component={AllPlaces}
         options={({ navigation }) => ({
+          title: 'Your Favorite Places',
           headerRight({ tintColor }) {
             return (
               <IconButton
@@ -32,7 +44,13 @@ export default function StackNavigation() {
           },
         })}
       />
-      <Stack.Screen name={RouteName.ADD_PLACE} component={AddPlace} />
+      <Stack.Screen
+        name={RouteName.ADD_PLACE}
+        component={AddPlace}
+        options={{
+          title: 'Add a new place',
+        }}
+      />
     </Stack.Navigator>
   );
 }
