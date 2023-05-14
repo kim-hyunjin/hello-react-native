@@ -61,7 +61,13 @@ export default function StackNavigation() {
         }}
       />
       <Stack.Screen name={RouteName.MAP} component={Map} />
-      <Stack.Screen name={RouteName.DETAIL} component={PlaceDetail} />
+      <Stack.Screen
+        name={RouteName.DETAIL}
+        component={PlaceDetail}
+        options={{
+          title: 'Loading Place...',
+        }}
+      />
     </Stack.Navigator>
   );
 }
