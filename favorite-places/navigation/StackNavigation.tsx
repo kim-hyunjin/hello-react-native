@@ -6,6 +6,7 @@ import IconButton from '../components/UI/IconButton';
 import { Colors } from '../constants/colors';
 import Map from '../screens/Map';
 import { LatLng, Place } from '../models/place';
+import PlaceDetail from '../screens/PlaceDetail';
 
 export type StackParamList = {
   [RouteName.ALL_PLACES]: undefined;
@@ -13,6 +14,9 @@ export type StackParamList = {
     pickedLatLng?: LatLng;
   };
   [RouteName.MAP]: undefined;
+  [RouteName.DETAIL]: {
+    placeId: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -57,6 +61,7 @@ export default function StackNavigation() {
         }}
       />
       <Stack.Screen name={RouteName.MAP} component={Map} />
+      <Stack.Screen name={RouteName.DETAIL} component={PlaceDetail} />
     </Stack.Navigator>
   );
 }

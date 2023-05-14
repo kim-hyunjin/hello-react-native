@@ -4,11 +4,18 @@ import { Colors } from '../../constants/colors';
 
 type Prop = {
   place: Place;
-  onSelect: () => void;
+  onSelect: (selectedPlace: Place) => void;
 };
 export default function PlaceItem({ place, onSelect }: Prop) {
+  const handleSelectItem = () => {
+    onSelect(place);
+  };
+
   return (
-    <Pressable onPress={onSelect} style={({ pressed }) => [styles.item, pressed && styles.pressed]}>
+    <Pressable
+      onPress={handleSelectItem}
+      style={({ pressed }) => [styles.item, pressed && styles.pressed]}
+    >
       <Image source={{ uri: place.imageUri }} style={styles.image} />
       <View style={styles.info}>
         <Text style={styles.title}>{place.title}</Text>
