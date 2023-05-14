@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, Alert, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
 
@@ -13,6 +13,29 @@ Notifications.setNotificationHandler({
 
 export default function App() {
   useEffect(() => {
+    async function configurePushNotifications() {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        Alert.alert('Permission required', 'Push notifications need the appropriate permissions.');
+        return;
+      }
+
+      const token = await Notifications.getExpoPushTokenAsync();
+      console.log({ token });
+      if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.DEFAULT,
+        });
+      }
+    }
+    configurePushNotifications();
+
     const subscription = Notifications.addNotificationReceivedListener((notification) => {
       console.log('notification received');
       console.log(notification);
@@ -44,9 +67,24 @@ export default function App() {
     });
   };
 
+  const sendPushNotificationHandler = async () => {
+    fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to: 'ExponentPushToken[lOJ3wMFXepEsxoqmNa2oqM]',
+        title: 'hello',
+        body: 'world',
+      }),
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Button title='Schedule Notification' onPress={scheduleNotificationHandler} />
+      <Button title='Send Push Notification' onPress={sendPushNotificationHandler} />
       <StatusBar style='auto' />
     </View>
   );
