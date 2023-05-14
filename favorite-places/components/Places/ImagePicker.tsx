@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { Colors } from '../../constants/colors';
 import OutlinedButton from '../UI/OutlinedButton';
 
-export default function ImagePicker() {
+type Props = {
+  onTakeImage: (uri: string) => void;
+};
+export default function ImagePicker({ onTakeImage }: Props) {
   const [permessionInfo, requestPermission] = ImagePickerLib.useCameraPermissions();
   const [pickedImage, setPickedImage] = useState<string>('');
 
@@ -41,6 +44,7 @@ export default function ImagePicker() {
     console.log(image);
     if (image.assets) {
       setPickedImage(image.assets[0].uri);
+      onTakeImage(image.assets[0].uri);
     }
   };
 

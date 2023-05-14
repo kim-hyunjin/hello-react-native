@@ -5,10 +5,12 @@ import AddPlace from '../screens/AddPlace';
 import IconButton from '../components/UI/IconButton';
 import { Colors } from '../constants/colors';
 import Map from '../screens/Map';
-import { LatLng } from '../models/place';
+import { LatLng, Place } from '../models/place';
 
 export type StackParamList = {
-  [RouteName.ALL_PLACES]: undefined;
+  [RouteName.ALL_PLACES]: {
+    place: Place;
+  };
   [RouteName.ADD_PLACE]: {
     pickedLatLng?: LatLng;
   };

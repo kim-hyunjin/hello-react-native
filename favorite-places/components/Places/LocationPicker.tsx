@@ -5,16 +5,19 @@ import { useState, useEffect } from 'react';
 
 import { getCurrentPositionAsync, useForegroundPermissions, PermissionStatus } from 'expo-location';
 import { LatLng } from '../../models/place';
-import { getMapPreview } from '../../utils/location';
+import { getAddress, getMapPreview } from '../../utils/location';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackParamList } from '../../navigation/StackNavigation';
 import { RouteName } from '../../navigation/route-name';
 
-export default function LocationPicker() {
+type Props = {
+  onTakeLocation: (props: { location: LatLng; address: string }) => void;
+};
+export default function LocationPicker({ onTakeLocation }: Props) {
   const [pickedLocation, setPickedLocation] = useState<LatLng | null>(null);
   const [permissionInfo, requestPermission] = useForegroundPermissions();
   const navigation = useNavigation<NavigationProp<StackParamList>>();
-  const route = useRoute<RouteProp<StackParamList>>();
+  const route = useRoute<RouteProp<StackParamList, RouteName.ADD_PLACE>>();
   const mapPickedLocation = route.params?.pickedLatLng;
 
   useEffect(() => {
@@ -22,6 +25,17 @@ export default function LocationPicker() {
       setPickedLocation(mapPickedLocation);
     }
   }, [mapPickedLocation]);
+
+  useEffect(() => {
+    async function handleLocation() {
+      if (pickedLocation) {
+        const address = await getAddress(pickedLocation);
+        onTakeLocation({ location: pickedLocation, address });
+      }
+    }
+
+    handleLocation();
+  }, [pickedLocation, onTakeLocation]);
 
   async function verifyPermissions() {
     if (permissionInfo?.status === PermissionStatus.UNDETERMINED) {
@@ -48,7 +62,8 @@ export default function LocationPicker() {
 
     const location = await getCurrentPositionAsync();
     console.log(location);
-    setPickedLocation({ lat: location.coords.latitude, lng: location.coords.longitude });
+    const latlng = { lat: location.coords.latitude, lng: location.coords.longitude };
+    setPickedLocation(latlng);
   }
 
   function pickOnMapHandler() {
