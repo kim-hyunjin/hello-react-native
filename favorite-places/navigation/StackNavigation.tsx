@@ -4,10 +4,15 @@ import AllPlaces from '../screens/AllPlaces';
 import AddPlace from '../screens/AddPlace';
 import IconButton from '../components/UI/IconButton';
 import { Colors } from '../constants/colors';
+import Map from '../screens/Map';
+import { LatLng } from '../models/place';
 
 export type StackParamList = {
   [RouteName.ALL_PLACES]: undefined;
-  [RouteName.ADD_PLACE]: undefined;
+  [RouteName.ADD_PLACE]: {
+    pickedLatLng?: LatLng;
+  };
+  [RouteName.MAP]: undefined;
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -51,6 +56,7 @@ export default function StackNavigation() {
           title: 'Add a new place',
         }}
       />
+      <Stack.Screen name={RouteName.MAP} component={Map} />
     </Stack.Navigator>
   );
 }

@@ -1,15 +1,27 @@
 import { View, StyleSheet, Alert, Image, Text } from 'react-native';
 import OutlinedButton from '../UI/OutlinedButton';
 import { Colors } from '../../constants/colors';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { getCurrentPositionAsync, useForegroundPermissions, PermissionStatus } from 'expo-location';
 import { LatLng } from '../../models/place';
 import { getMapPreview } from '../../utils/location';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { StackParamList } from '../../navigation/StackNavigation';
+import { RouteName } from '../../navigation/route-name';
 
 export default function LocationPicker() {
   const [pickedLocation, setPickedLocation] = useState<LatLng | null>(null);
   const [permissionInfo, requestPermission] = useForegroundPermissions();
+  const navigation = useNavigation<NavigationProp<StackParamList>>();
+  const route = useRoute<RouteProp<StackParamList>>();
+  const mapPickedLocation = route.params?.pickedLatLng;
+
+  useEffect(() => {
+    if (mapPickedLocation) {
+      setPickedLocation(mapPickedLocation);
+    }
+  }, [mapPickedLocation]);
 
   async function verifyPermissions() {
     if (permissionInfo?.status === PermissionStatus.UNDETERMINED) {
@@ -39,7 +51,9 @@ export default function LocationPicker() {
     setPickedLocation({ lat: location.coords.latitude, lng: location.coords.longitude });
   }
 
-  function pickOnMapHandler() {}
+  function pickOnMapHandler() {
+    navigation.navigate(RouteName.MAP);
+  }
 
   let mapPreview = <Text>No location picked yet</Text>;
 
