@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "meals-app",
+    "name": "My Recipe Book",
     "slug": "meals-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,19 +13,30 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "buildNumber": "1.0.0",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kimhyunjin.mealsapp"
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kimhyunjin.mealsapp"
     },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1d501ce6-2834-4751-92e6-262e458d242f"
+      }
     }
   }
 }
