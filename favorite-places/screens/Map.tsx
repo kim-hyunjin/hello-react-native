@@ -9,17 +9,21 @@ import IconButton from '../components/UI/IconButton';
 
 type Props = NativeStackScreenProps<StackParamList, RouteName.MAP>;
 
-export default function Map({ navigation }: Props) {
+export default function Map({ navigation, route }: Props) {
   const [selectedLocation, setSelectedLocation] = useState<LatLng | null>(null);
 
   const region: Region = {
-    latitude: 37.78,
-    longitude: -122.43,
+    latitude: route.params?.initialLatLng?.lat ?? 37.78,
+    longitude: route.params?.initialLatLng?.lng ?? -122.43,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
 
   function selectLocationHandler(event: MapPressEvent) {
+    if (route.params?.initialLatLng) {
+      return;
+    }
+
     const lat = event.nativeEvent.coordinate.latitude;
     const lng = event.nativeEvent.coordinate.longitude;
 
@@ -42,6 +46,10 @@ export default function Map({ navigation }: Props) {
   );
 
   useLayoutEffect(() => {
+    if (route.params?.initialLatLng) {
+      setSelectedLocation(route.params.initialLatLng);
+      return;
+    }
     navigation.setOptions({
       headerRight({ tintColor }) {
         return (
@@ -54,7 +62,7 @@ export default function Map({ navigation }: Props) {
         );
       },
     });
-  }, [navigation, savePickedLocationHandler]);
+  }, [navigation, savePickedLocationHandler, route]);
 
   return (
     <MapView style={styles.map} initialRegion={region} onPress={selectLocationHandler}>

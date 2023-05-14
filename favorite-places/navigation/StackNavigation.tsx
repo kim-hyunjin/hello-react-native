@@ -10,10 +10,12 @@ import PlaceDetail from '../screens/PlaceDetail';
 
 export type StackParamList = {
   [RouteName.ALL_PLACES]: undefined;
-  [RouteName.ADD_PLACE]: {
+  [RouteName.ADD_PLACE]?: {
     pickedLatLng?: LatLng;
   };
-  [RouteName.MAP]: undefined;
+  [RouteName.MAP]?: {
+    initialLatLng?: LatLng;
+  };
   [RouteName.DETAIL]: {
     placeId: string;
   };

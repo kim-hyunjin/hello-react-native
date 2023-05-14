@@ -28,7 +28,9 @@ export default function PlaceDetail({ route, navigation }: Props) {
   }, [selectedPlaceId]);
 
   const showOnMapHandler = () => {
-    navigation.navigate(RouteName.MAP);
+    navigation.navigate(RouteName.MAP, {
+      initialLatLng: fetchedPlace?.location,
+    });
   };
 
   if (!fetchedPlace) {
