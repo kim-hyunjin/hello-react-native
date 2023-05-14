@@ -8,9 +8,7 @@ import Map from '../screens/Map';
 import { LatLng, Place } from '../models/place';
 
 export type StackParamList = {
-  [RouteName.ALL_PLACES]: {
-    place: Place;
-  };
+  [RouteName.ALL_PLACES]: undefined;
   [RouteName.ADD_PLACE]: {
     pickedLatLng?: LatLng;
   };
